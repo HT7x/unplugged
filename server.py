@@ -47,7 +47,28 @@ def execute_kill(endpoint: str):
     print("response: ", response)
     return response
 
-def setStatusPage():
+def execute_pulse(endpoint: str):
+    exp_params: dict = request.get_json()
+    print("params", exp_params)
+
+    #make sure the jig is not being used 
+    pulse_jig = exp_params['jig']
+    url = make_url(
+        ip_ending=config.machines[pulse_jig],
+        endpoint=config.endpoints['get jig status'])  
+    response_status = requests.get(url=url, timeout=1).text
+    time.sleep(1)
+    if response_status == "0" or response_status == "2":
+        logging.info(exp_params)
+        url = make_url(ip_ending=config.machines[exp_params['jig']], endpoint=endpoint)
+        print("url: ", url)
+        response = requests.post(url=url, data=exp_params).text
+        print("response: ", response)
+        return response
+    else:
+        return "Jig is currently being used"
+
+def get_status():
     returned = [] 
     jigs = config.machines.keys()
 
@@ -72,7 +93,8 @@ def status_page():
 @app.route('/pulse', methods=['POST'])
 def get_wave():
     print("bad")
-    return execute(endpoint=config.endpoints['single pulse'])
+
+    return execute_pulse(endpoint=config.endpoints['single pulse'])
 
 
 @app.route('/start', methods=['POST'])
@@ -115,7 +137,7 @@ def setStatusPage():
             try:
                 response2 = requests.get(url=url2, timeout=1).text
                 print(response2)
-                if response2 == "0.0":
+                if response2 == "-1.0":
                    returned[jig].append("Has not been updated")
                 else: 
                     returned[jig].append(int(time.time() - float(response2)))

@@ -1,6 +1,7 @@
 const JIG = "jig";
 const INPUTS = "inputFields";
 var selectedJig = '';
+var chart;
 
 
 //get the saved value function - return the value of "v" from localStorage. 
@@ -39,7 +40,7 @@ function getJigStatus() {
 };
 
 function setStatusPage() {
-    
+
 }
 function linspace(start, end, n) {
     const step = (end - start) / (n - 1);
@@ -52,8 +53,17 @@ function onload_figure(xhr) {
         var waveform = xhr.response["amps"][0];
         var time_array = linspace(start = 10, end = 20, n = waveform.length);
 
+        // Remove existing canvas
+        document.getElementById('figure').remove();
+
+        // Create a new canvas
+        var canvas = document.createElement('canvas');
+        canvas.id = 'figure';
+        document.body.appendChild(canvas);
+
         const figDiv = document.getElementById('figure').getContext('2d');
-        plot(figDiv, time_array, waveform);
+        
+        chart = plot(figDiv, time_array, waveform);
     }
 }
 
@@ -166,19 +176,26 @@ function send(payload, endpoint, onload_fn) {
     xhr.send(JSON.stringify(payload));
 }
 
+function goto_status(event){
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.open("POST", "/status_page", true);
+    xhr.send();
+}
 
-function toggleInputFields() {
-    selectedJigNew = document.getElementById(JIG);
+function toggleinputfields() {
+    selectedjignew = document.getElementById(JIG);
 
-    if (selectedJigNew === selectedJig) {
+    if (selectedjignew === selectedJig) {
         return;
     }
 
-    selectedJig = selectedJigNew;
-    document.getElementById("figure").innerHTML = "";
+    selectedjig = selectedjignew;
+    document.getElementById("figure").innerhtml = "";
 
 
-    // var x = document.getElementById(INPUTS);
+    // var x = document.getelementbyid(inputs);
     // if (x.style.display === "none") {
     //     x.style.display = "block";
     // } else {
@@ -189,12 +206,12 @@ function toggleInputFields() {
 
 window.onload = function () {
     /**
-     * Listen to buttons and act upon them being clicked.
-     */// Call toggleInputFields on initial load
+     * listen to buttons and act upon them being clicked.
+     */// call toggleinputfields on initial load
     
     document.getElementById(JIG).addEventListener("change", function () {
-        // getJigStatus();
-        toggleInputFields();
+        // getjigstatus();
+        toggleinputfields();
         persist();
     });
 
@@ -211,6 +228,11 @@ window.onload = function () {
     document.getElementById("kill").addEventListener("click", function (event) {
         // get confirmation
         execute(event, "stop");
+    });
+
+    document.getElementById("go_status").addEventListener("click", function (event) {
+        // get confirmation
+        window.location.href = "status_page";
     });
 }
 

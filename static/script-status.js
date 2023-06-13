@@ -64,6 +64,11 @@ window.onload = function() {
     };
 
     xhr.send();
+    document.getElementById("go_home").addEventListener("click", function (event) {
+        // get confirmation
+        console.log("home")
+        window.location.href = "/";
+    });
 };
 
 

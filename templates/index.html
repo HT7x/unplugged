@@ -3,18 +3,18 @@
 
 <head>
     <meta charset="utf-8">
-    <title>MTV Unplugged</title>
+    <title>mtv unplugged</title>
     <link rel="stylesheet" href="/static/style.css">
     <link rel="icon" href="/static/kerry.png">
 </head>
 
 <body>
-    <h1>&#119070 Getting jiggy with it &#x266a</h1>
+    <h1>&#119070 getting jiggy with it &#x266a</h1>
 
     <div class="form-group">
-        <label for="jig">Jig:</label>
+        <label for="jig">jig:</label>
         <select id="jig" name="jig">
-            <option value="" selected disabled>Select Jig</option>
+            <option value="" selected disabled>select jig</option>
             {% for option in jigs %}
             <option value="{{ option }}">{{ option }}</option>
             {% endfor %}
@@ -22,12 +22,12 @@
     </div>
 
     <form>
-        <div class="form-group" id="inputFields">
+        <div class="form-group" id="inputfields">
            
             <br>
             <br>
             <div class="lab-inp">
-                <label for="duration">Duration [us]:</label>
+                <label for="duration">duration [us]:</label>
                 <input type="number" id="duration" name="duration" onkeyup="saveValue(this)" ;>
 
             </div>
@@ -35,7 +35,7 @@
             <br>
             <br>
             <div class="lab-inp">
-                <label for="delay">Delay [us]:</label>
+                <label for="delay">delay [us]:</label>
                 <input type="number" id="delay" name="delay" onkeyup="saveValue(this)" ;>
             </div>
            
@@ -44,7 +44,7 @@
             <br> 
 
             <div class="lab-inp">
-                <label for="avg_num">Avg num [ ]:</label>
+                <label for="avg_num">avg num [ ]:</label>
                 <input type="number" id="avg_num" name="avg_num" onkeyup="saveValue(this)" ;>
             </div>
             
@@ -53,7 +53,7 @@
             <br>
 
             <div class="lab-inp">
-                <label for="voltage_range">Voltage range [V]:</label>
+                <label for="voltage_range">voltage range [v]:</label>
                 <input type="number" id="voltage_range" name="voltage_range" onkeyup="saveValue(this)" ;>
             </div>
             
@@ -61,7 +61,7 @@
             <br>
             <br>
             <div class="lab-inp">
-                <label for="interval">Interval [s]:</label>
+                <label for="interval">interval [s]:</label>
                 <input type="number" id="interval" name="interval" onkeyup=" saveValue(this)" ;>
             </div>
             
@@ -70,8 +70,8 @@
             <br>
             
             <div class="lab-inp">
-                <label for="exp_duration">Exp duration [h]:</label>
-                <input type="number" id="exp_duration" name="exp_duration" onkeyup="saveValue(this)" ;>
+                <label for="exp_duration">exp duration [h]:</label>
+                <input type="number" id="exp_duration_h" name="exp_duration" onkeyup="saveValue(this)" ;>
 
             </div>
             
@@ -79,7 +79,7 @@
             <br>
 
             <div class="lab-inp">
-                <label for="exp_id">Experiment Identifier:</label>
+                <label for="exp_id">experiment identifier:</label>
                 <input type="text" id="exp_id" name="exp_id" ;>
             </div>
            
@@ -88,10 +88,10 @@
         <br>
         <br>
         <div class="button-container">
-            <button type="button" id="pulse">Send a single pulse</button>
-            <button type="button" id="start">Start experiment</button>
-            <button type="button" id="kill">Kill experiment</button>
-            <!-- <button type="button" id="test"> Test</button> -->
+            <button type="button" id="pulse">send a single pulse</button>
+            <button type="button" id="start">start experiment</button>
+            <button type="button" id="kill">kill experiment</button>
+            <button type="button" id="go_status"> Status Page</button>
         </div>
         
 
