@@ -22,57 +22,78 @@
     </div>
 
     <form>
-        <div class="form-group" id="inputFields" style="display: none;">
-            <label> <i>The default values are the previous ones for the currently selected jig</i></label>
+        <div class="form-group" id="inputFields">
+           
+            <br>
+            <br>
+            <div class="lab-inp">
+                <label for="duration">Duration [us]:</label>
+                <input type="number" id="duration" name="duration" onkeyup="saveValue(this)" ;>
+
+            </div>
+            
+            <br>
+            <br>
+            <div class="lab-inp">
+                <label for="delay">Delay [us]:</label>
+                <input type="number" id="delay" name="delay" onkeyup="saveValue(this)" ;>
+            </div>
+           
+
+            <br>
+            <br> 
+
+            <div class="lab-inp">
+                <label for="avg_num">Avg num [ ]:</label>
+                <input type="number" id="avg_num" name="avg_num" onkeyup="saveValue(this)" ;>
+            </div>
+            
 
             <br>
             <br>
 
-            <label for="duration">Duration [us]:</label>
-            <input type="number" id="duration" name="duration" onkeyup="saveValue(this)" ;>
+            <div class="lab-inp">
+                <label for="voltage_range">Voltage range [V]:</label>
+                <input type="number" id="voltage_range" name="voltage_range" onkeyup="saveValue(this)" ;>
+            </div>
+            
+            
+            <br>
+            <br>
+            <div class="lab-inp">
+                <label for="interval">Interval [s]:</label>
+                <input type="number" id="interval" name="interval" onkeyup=" saveValue(this)" ;>
+            </div>
+            
 
             <br>
             <br>
+            
+            <div class="lab-inp">
+                <label for="exp_duration">Exp duration [h]:</label>
+                <input type="number" id="exp_duration" name="exp_duration" onkeyup="saveValue(this)" ;>
 
-            <label for="delay">Delay [us]:</label>
-            <input type="number" id="delay" name="delay" onkeyup="saveValue(this)" ;>
-
+            </div>
+            
             <br>
             <br>
 
-            <label for="avg_num">Avg num [ ]:</label>
-            <input type="number" id="avg_num" name="avg_num" onkeyup="saveValue(this)" ;>
-
-            <br>
-            <br>
-
-            <label for="voltage_range">Voltage range [V]:</label>
-            <input type="number" id="voltage_range" name="voltage_range" onkeyup="saveValue(this)" ;>
-            <br>
-            <br>
-
-            <label for="interval">Interval [s]:</label>
-            <input type="number" id="interval" name="interval" onkeyup=" saveValue(this)" ;>
-
-            <br>
-            <br>
-
-            <label for="exp_duration">Exp duration [h]:</label>
-            <input type="number" id="exp_duration" name="exp_duration" onkeyup="saveValue(this)" ;>
-
-            <br>
-            <br>
-
-            <label for="exp_id">Experiment Identifier:</label>
-            <input type="text" id="exp_id" name="exp_id" ;>
+            <div class="lab-inp">
+                <label for="exp_id">Experiment Identifier:</label>
+                <input type="text" id="exp_id" name="exp_id" ;>
+            </div>
+           
         </div>
 
         <br>
         <br>
-
-        <button type="submit" id="pulse">Send a single pulse</button>
-        <button type="submit" id="start">Start experiment</button>
-        <button type="submit" id="kill">Kill experiment</button>
+        <div class="button-container">
+            <button type="button" id="pulse">Send a single pulse</button>
+            <button type="button" id="start">Start experiment</button>
+            <button type="button" id="kill">Kill experiment</button>
+            <!-- <button type="button" id="test"> Test</button> -->
+        </div>
+        
 
     </div>
 
@@ -85,8 +106,7 @@
     <div id="message"></div>
     <div>
         <canvas id="figure"></canvas>
-    </div>
-
+    </div> 
     <script src="/static/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>

@@ -8,20 +8,21 @@ body {
 
 .form-group {
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+    flex-direction: column;
+    /* justify-content: flex-start; */
     /* Align items to the left */
-    align-items: center;
+    align-items: left;
     margin-bottom: 10px;
 }
 
 .form-group label {
     margin-right: 10px;
-    text-align: left;
+    /* text-align: left; */
 }
 
 .form-group input[type="text"] {
-    text-align: left;
+    text-align: right;
+    margin-left: auto;
 }
 
 .form-group input[type="number"] {
@@ -39,4 +40,32 @@ form {
     /* Align the form to the left within the body */
     margin: 0;
     padding: 0px;
+}
+
+.button-container button {
+    display: inline-block;
+}
+
+.myClass label, .myClass input {
+ 
+    display: inline-block;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+    padding: 15px;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
 }

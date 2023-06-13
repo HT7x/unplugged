@@ -20,6 +20,7 @@ function execute(event, endpoint) {
 
     event.preventDefault();
     var inputElements = document.querySelectorAll("input");
+    console.log(inputElements);
 
     for (var i = 0; i < inputElements.length; i++) {
         saveValue(inputElements[i]);
@@ -27,6 +28,7 @@ function execute(event, endpoint) {
 
     var ip_ending_value = document.getElementById(JIG).options[document.getElementById(JIG).selectedIndex].value;
     var exp_params = parse(inputElements, ip_ending_value);
+    console.log("hey")
     send(payload = exp_params, endpoint = endpoint, onload_fn = onload_figure);
 };
 
@@ -36,7 +38,9 @@ function getJigStatus() {
     send(payload = selectedJig, endpoint = "status", onload_fn = onload_status);
 };
 
-
+function setStatusPage() {
+    
+}
 function linspace(start, end, n) {
     const step = (end - start) / (n - 1);
     return Array.from({ length: n }, (_, i) => start + step * i);
@@ -44,7 +48,7 @@ function linspace(start, end, n) {
 
 
 function onload_figure(xhr) {
-    if (xhr.status === 200) {
+    if (xhr.status === 200 && xhr.response["amps"][0] != null) {
         var waveform = xhr.response["amps"][0];
         var time_array = linspace(start = 10, end = 20, n = waveform.length);
 
@@ -83,7 +87,7 @@ function persist() {
         var input = inputElements[i];
         var tag = selectedJig.concat('.', input.id);
         val = getSavedValue(tag);    // set the value to this input
-        console.log(val);
+        // console.log(val);
         document.getElementById(input.id).value = val
         // document.getElementById(input.id).value = getSavedValue(tag);    // set the value to this input
     }
@@ -174,11 +178,12 @@ function toggleInputFields() {
     document.getElementById("figure").innerHTML = "";
 
 
-    var x = document.getElementById(INPUTS);
-    if (x.style.display === "none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
+    // var x = document.getElementById(INPUTS);
+    // if (x.style.display === "none") {
+    //     x.style.display = "block";
+    // } else {
+    //     x.style.display = "none";
+    // }
     
 }
 
@@ -186,18 +191,26 @@ window.onload = function () {
     /**
      * Listen to buttons and act upon them being clicked.
      */// Call toggleInputFields on initial load
-
+    
     document.getElementById(JIG).addEventListener("change", function () {
-        getJigStatus();
+        // getJigStatus();
         toggleInputFields();
         persist();
     });
+
     document.getElementById("pulse").addEventListener("click", function (event) {
         execute(event, "pulse");
     });
+
+
     document.getElementById("start").addEventListener("click", function (event) {
         // get confirmation
         execute(event, "start");
+    });
+
+    document.getElementById("kill").addEventListener("click", function (event) {
+        // get confirmation
+        execute(event, "stop");
     });
 }
 
