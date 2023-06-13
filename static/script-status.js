@@ -42,11 +42,15 @@ window.onload = function() {
 
                     // Create new table data (td) element for the value
                     var td2 = document.createElement('td');
-                    td2.textContent = data[key];
+                    td2.textContent = data[key][0];
+
+                    var td3 = document.createElement('td');
+                    td3.textContent = data[key][1];
 
                     // Append the td elements to the tr
                     tr.appendChild(td1);
                     tr.appendChild(td2);
+                    tr.appendChild(td3);
 
                     // Append the tr to the table
                     table.appendChild(tr);

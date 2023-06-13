@@ -4,6 +4,7 @@ import logging
 
 from flask import Flask, request, render_template, jsonify
 import requests
+import time
 
 import config
 import utils
@@ -86,14 +87,6 @@ def end():
 
 
 @app.route('/status', methods=['POST'])
-# def status():
-#     jig = request.get_json()
-#     url = make_url(
-#         ip_ending=config.machines[jig],
-#         endpoint=config.endpoints['get jig status']
-#     )
-#     response = requests.get(url=url).text
-#     return json.dumps({'status': config.jig_status[response]})
 def setStatusPage():
     returned = {}
     jigs = config.machines.keys()
@@ -101,6 +94,9 @@ def setStatusPage():
 
     for jig in jigs:
         print(jig)
+        if jig not in returned:
+            returned[jig] = []
+
         url = make_url(
         ip_ending=config.machines[jig],
         endpoint=config.endpoints['get jig status']) 
@@ -109,14 +105,37 @@ def setStatusPage():
             response = requests.get(url=url, timeout=1).text
             
             print(response) 
-            returned[jig] = response
+            returned[jig].append(response)
+
+            # last_updated
+            url2 = make_url(
+            ip_ending=config.machines[jig],
+            endpoint=config.endpoints['get last update']) 
+
+            try:
+                response2 = requests.get(url=url2, timeout=1).text
+                print(response2)
+                if response2 == "0.0":
+                   returned[jig].append("Has not been updated")
+                else: 
+                    returned[jig].append(int(time.time() - float(response2)))
+            
+
+            except Exception as d:
+                returned[jig] = "No Connection"
+                print("An error occurred:", d)
+                
+
             print(returned)
           
         except Exception as e:
             # Continue execution after catching any exception
-            returned[jig] = "No Connection"
+            returned[jig].append("No Connection")
+            returned[jig].append("No Connection")
+
             print("An error occurred:", e)
-            
+
+        
     return returned
 
 if __name__ == '__main__':
