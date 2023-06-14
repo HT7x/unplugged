@@ -37,6 +37,28 @@ def execute(endpoint: str):
     print("response: ", response)
     return response
 
+def execute_start(endpoint: str):
+    exp_params: dict = request.get_json()
+    print("params", exp_params)
+    logging.info(exp_params)
+
+    #make sure the jig is not being used
+    start_jig = exp_params['jig']
+    url_jig = make_url(config.machines[start_jig], config.endpoints['get jig status'])  
+    response_status = requests.get(url=url_jig, timeout=1).text
+    time.sleep(1)
+    print("status response after requesting to start: ", response_status)
+    if response_status == "0" or response_status == "2": 
+        url = make_url(ip_ending=config.machines[exp_params['jig']], endpoint=endpoint)
+        print("url: ", url)
+        response = requests.post(url=url, data=exp_params).text
+        print("response: ", response)
+        return response 
+    elif response_status == "1":
+        return jsonify("jig_used") 
+    else:
+        return jsonify("ERR") 
+
 def execute_kill(endpoint: str):
     exp_params: dict = request.get_json()
     print("params", exp_params)
@@ -53,20 +75,18 @@ def execute_pulse(endpoint: str):
 
     #make sure the jig is not being used 
     pulse_jig = exp_params['jig']
-    url = make_url(
-        ip_ending=config.machines[pulse_jig],
-        endpoint=config.endpoints['get jig status'])  
+    url = make_url(config.machines[pulse_jig], config.endpoints['get jig status'])  
     response_status = requests.get(url=url, timeout=1).text
     time.sleep(1)
     if response_status == "0" or response_status == "2":
         logging.info(exp_params)
-        url = make_url(ip_ending=config.machines[exp_params['jig']], endpoint=endpoint)
+        url = make_url(config.machines[exp_params['jig']], endpoint)
         print("url: ", url)
         response = requests.post(url=url, data=exp_params).text
         print("response: ", response)
         return response
     else:
-        return "Jig is currently being used"
+        return jsonify("jig_used")
 
 def get_status():
     returned = [] 
@@ -92,19 +112,19 @@ def status_page():
 
 @app.route('/pulse', methods=['POST'])
 def get_wave():
-    print("bad")
+    print("sending pulse signal to controller...")
 
     return execute_pulse(endpoint=config.endpoints['single pulse'])
 
 
 @app.route('/start', methods=['POST'])
 def calculate():
-    print("good")
-    return execute(endpoint=config.endpoints['run experiment'])
+    print("sending start signal to controller...")
+    return execute_start(endpoint=config.endpoints['run experiment'])
 
 @app.route('/stop', methods=['POST'])
 def end(): 
-    print("Hey")
+    print("sending stop signal to controller...")
     return execute_kill(endpoint=config.endpoints['stop experiment'])
 
 

@@ -29,9 +29,127 @@ function execute(event, endpoint) {
 
     var ip_ending_value = document.getElementById(JIG).options[document.getElementById(JIG).selectedIndex].value;
     var exp_params = parse(inputElements, ip_ending_value);
-    console.log("hey")
+    console.log("sending...")
     send(payload = exp_params, endpoint = endpoint, onload_fn = onload_figure);
+    console.log("sent!")
 };
+
+function execute_pulse(event, endpoint){
+    event.preventDefault();
+    var inputElements = document.querySelectorAll("input");
+    console.log(inputElements);
+
+    for (var i = 0; i < inputElements.length; i++) {
+        saveValue(inputElements[i]);
+    }
+
+    var ip_ending_value = document.getElementById(JIG).options[document.getElementById(JIG).selectedIndex].value;
+    var exp_params = parse(inputElements, ip_ending_value);
+    console.log("sending...")
+
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    xhr.open("POST", "/pulse", true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onload = function() {
+        if (xhr.status == 200) {
+            var resp = xhr.response;
+            console.log("respond", resp);
+
+
+            if (resp == "jig_used"){
+                console.log("nay");
+                var banner = document.getElementById('banner'); 
+                banner.innerText = 'Jig is used';
+                banner.style.backgroundColor = 'red';  // Optional: style the banner
+            }
+            
+            else {
+                console.log("yay");
+                var banner = document.getElementById('banner'); 
+                banner.innerText = 'great success!';
+                banner.style.backgroundColor = 'green';  // Optional: style the banner
+                send(payload = exp_params, endpoint = endpoint, onload_fn = onload_figure);
+            }
+        }else {
+            console.log('Error with status code ' + xhr.status);
+        }
+    
+    };
+    xhr.onerror = function() {
+        console.log('Network error');
+    };
+        
+    xhr.send(JSON.stringify(exp_params));
+   
+
+    
+}
+
+function execute_start(event, endpoint) {
+    
+
+    event.preventDefault();
+    var inputElements = document.querySelectorAll("input");
+    console.log(inputElements);
+
+    for (var i = 0; i < inputElements.length; i++) {
+        saveValue(inputElements[i]);
+    }
+
+    var ip_ending_value = document.getElementById(JIG).options[document.getElementById(JIG).selectedIndex].value;
+    var exp_params = parse(inputElements, ip_ending_value);
+    console.log("sending...")
+
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    xhr.open("POST", "/start", true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onload = function() {
+        if (xhr.status == 200) {
+            var resp = xhr.response;
+            console.log("respond", resp);
+
+
+            if (resp == "1"){
+                console.log("Yay");
+                var banner = document.getElementById('banner'); 
+                banner.innerText = 'Experiment started successfully';
+                banner.style.backgroundColor = 'green';  // Optional: style the banner
+            }
+            else if (resp == "jig_used") {
+                console.log("experiment is already on");
+                var banner = document.getElementById('banner'); 
+                banner.innerText = 'Experiment is running';
+                banner.style.backgroundColor = 'red';  // Optional: style the banner
+            }
+            else if (resp == "ERR"){
+                console.log("An error has occured");
+                var banner = document.getElementById('banner'); 
+                banner.innerText = 'Error';
+                banner.style.backgroundColor = 'red';  // Optional: style the banner
+            }
+            else {
+                console.log("Unkown error")             
+            }
+        }else {
+            console.log('Error with status code ' + xhr.status);
+        }
+    
+    };
+    xhr.onerror = function() {
+        console.log('Network error');
+    };
+        
+    xhr.send(JSON.stringify(exp_params));
+   
+
+   
+}
 
 
 function getJigStatus() {
@@ -174,6 +292,7 @@ function send(payload, endpoint, onload_fn) {
         onload_fn(xhr);
     };
     xhr.send(JSON.stringify(payload));
+    return xhr;
 }
 
 function goto_status(event){
@@ -193,14 +312,6 @@ function toggleinputfields() {
 
     selectedjig = selectedjignew;
     document.getElementById("figure").innerhtml = "";
-
-
-    // var x = document.getelementbyid(inputs);
-    // if (x.style.display === "none") {
-    //     x.style.display = "block";
-    // } else {
-    //     x.style.display = "none";
-    // }
     
 }
 
@@ -216,13 +327,13 @@ window.onload = function () {
     });
 
     document.getElementById("pulse").addEventListener("click", function (event) {
-        execute(event, "pulse");
+        execute_pulse(event, "pulse");
     });
 
 
     document.getElementById("start").addEventListener("click", function (event) {
         // get confirmation
-        execute(event, "start");
+        execute_start(event, "start");
     });
 
     document.getElementById("kill").addEventListener("click", function (event) {
