@@ -338,7 +338,9 @@ window.onload = function () {
 
     document.getElementById("kill").addEventListener("click", function (event) {
         // get confirmation
+        if (confirm("Are you sure you want to kill experiment?")) {
         execute(event, "stop");
+        }
     });
 
     document.getElementById("go_status").addEventListener("click", function (event) {
