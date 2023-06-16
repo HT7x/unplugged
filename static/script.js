@@ -34,6 +34,68 @@ function execute(event, endpoint) {
     console.log("sent!")
 };
 
+function execute_kill(event, endpoint) {
+
+    event.preventDefault();
+    var inputElements = document.querySelectorAll("input");
+    console.log(inputElements);
+
+    for (var i = 0; i < inputElements.length; i++) {
+        saveValue(inputElements[i]);
+    }
+
+    var ip_ending_value = document.getElementById(JIG).options[document.getElementById(JIG).selectedIndex].value;
+    var exp_params = parse(inputElements, ip_ending_value);
+    console.log("sending...")
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    xhr.open("POST", "/stop", true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    
+    xhr.onload = function() {
+        if (xhr.status == 200) {
+            var resp = xhr.response;
+            console.log("respond", resp);
+
+
+            if (resp == "Not_started"){
+                console.log("nay");
+                var banner = document.getElementById('banner'); 
+                banner.innerText = 'Jig is not in use';
+                banner.style.backgroundColor = 'red';  // Optional: style the banner
+            }
+            
+            else if (resp == "2") {
+                console.log("yay");
+                var banner = document.getElementById('banner'); 
+                banner.innerText = 'Experiment stopped successfully';
+                banner.style.backgroundColor = 'green';  // Optional: style the banner
+                send(payload = exp_params, endpoint = endpoint, onload_fn = onload_figure);
+            }
+            else {
+                console.log("nay");
+                var banner = document.getElementById('banner'); 
+                banner.innerText = `Error ${resp}`;
+                banner.style.backgroundColor = 'red';  // Optional: style the banner 
+            }
+        }else {
+            console.log('Error with status code ' + xhr.status);
+        }
+    
+    };
+    xhr.onerror = function() {
+        console.log('Network error');
+    };
+        
+    xhr.send(JSON.stringify(exp_params));
+    
+    console.log("sent!")
+
+
+
+}
+
 function execute_pulse(event, endpoint){
     event.preventDefault();
     var inputElements = document.querySelectorAll("input");
@@ -339,7 +401,7 @@ window.onload = function () {
     document.getElementById("kill").addEventListener("click", function (event) {
         // get confirmation
         if (confirm("Are you sure you want to kill experiment?")) {
-        execute(event, "stop");
+        execute_kill(event, "stop");
         }
     });
 

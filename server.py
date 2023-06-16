@@ -63,9 +63,19 @@ def execute_kill(endpoint: str):
     exp_params: dict = request.get_json()
     print("params", exp_params)
     logging.info(exp_params)
+    ##
+    #make sure the jig is not being used
+    stop_jig = exp_params['jig']
+    url_jig = make_url(config.machines[stop_jig], config.endpoints['get jig status'])  
+    response_status = requests.get(url=url_jig, timeout=1).text
+    time.sleep(1)
+    print("status response after requesting to stop: ", response_status)
+    if response_status == "0" or response_status == "2": 
+        return jsonify("Not_started")
+    ##
     url = make_url(ip_ending=config.machines[exp_params['jig']], endpoint=endpoint)
     print("url: ", url)
-    response = requests.get(url=url).text
+    response = requests.get(url=url, timeout=10).text
     print("response: ", response)
     return response
 
